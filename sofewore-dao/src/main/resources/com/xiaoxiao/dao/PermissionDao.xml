@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoxiao.dao.PermissionDao">
+
+    <insert id="add">
+        insert into bz_permission(permissionName,url) values(#{permissionName},#{url})
+    </insert>
+    <update id="update">
+        update bz_permission set permissionName = #{permissionName},url = #{url}
+            where pid = #{pid}
+    </update>
+    <delete id="delete" parameterType="long">
+        delete from bz_permission where pid = #{pid}
+    </delete>
+    <delete id="deleteRoleToPermission" parameterType="long">
+        delete from bz_role_permission where pid = #{pid}
+    </delete>
+    <select id="findById" parameterType="long" resultType="com.xiaoxiao.domain.Permission">
+        select * from bz_permission
+            where pid = #{pid}
+    </select>
+    <select id="all" resultType="com.xiaoxiao.domain.Permission">
+        select * from bz_permission
+    </select>
+
+
+</mapper>

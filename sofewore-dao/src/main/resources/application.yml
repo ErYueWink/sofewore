@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: SoftWareDao
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///baizhanshopping?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    druid:
+      db-type: mysql
+      max-active: 20 # 最大活跃连接数
+      max-wait: 60000 # 获取连接最大等待时间
+      initial-size: 5 # 初始化连接数
+      min-idle: 3 # 最小空闲连接数
+      time-between-eviction-runs-millis: 60000 # 连接池空闲连接检测线程的运行间隔时间，单位为毫秒。
+      min-evictable-idle-time-millis: 30000 # 连接池连接的而最小空闲时间
+      validation-query: SELECT 1 # 用于检测是否连接有效的SQL语句
+      test-while-idle: true # 空闲时是否进行有效检测
+      test-on-borrow: true # 从连接池中获取连接时是否进行连接有效性检测。
+      test-on-return: true # 归还连接给连接池是否进行有效性检测
+      pool-prepared-statements: true # 是否缓存PreparedStatement
+      max-pool-prepared-statement-per-connection-size: 20 # 每个连接上缓存PreparedStatement的最大数量
+      filter: stat,wall,log4j # 连接池过滤器用于监控和防御sql注入
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000 # 连接属性配置，用于配置Druid的一些特殊属性
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+

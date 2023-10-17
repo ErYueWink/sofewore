@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoxiao.dao.RoleDao">
+
+    <resultMap id="roleMapper" type="com.xiaoxiao.domain.Role">
+        <id column="rid" property="rid"></id>
+        <result column="roleName" property="roleName"></result>
+        <result column="roleDesc" property="roleDesc"></result>
+        <collection property="permissions" column="rid" ofType="com.xiaoxiao.domain.Permission">
+            <id property="pid" column="pid"></id>
+            <result property="permissionName" column="permissionName"></result>
+            <result property="url" column="url"></result>
+        </collection>
+    </resultMap>
+    <insert id="insertPermissionToRole">
+        insert into bz_role_permission values(#{rid},#{pid})
+    </insert>
+    <insert id="add">
+        insert info bz_role(roleName,roleDesc) values(#{roleName},#{roleDesc})
+    </insert>
+    <update id="update">
+        update bz_role set roleName = #{roleName},roleDesc = #{roleDesc} where rid = #{rid}
+    </update>
+    <select id="all" resultType="com.xiaoxiao.domain.Role">
+        select * from bz_role
+    </select>
+    <delete id="deletePermissionToRole" parameterType="long">
+        delete from bz_role_permission where rid = #{rid}
+    </delete>
+    <delete id="delete" parameterType="long">
+        delete from bz_role where rid = rid
+    </delete>
+    <select id="findById" parameterType="long" resultMap="roleMapper">
+        SELECT
+            *
+        FROM
+            bz_role
+                LEFT JOIN bz_role_permission ON bz_role.rid = bz_role_permission.rid
+                LEFT JOIN bz_permission ON bz_role_permission.pid = bz_permission.pid
+        WHERE
+            bz_role.rid = #{rid}
+    </select>
+
+</mapper>

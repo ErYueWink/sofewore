@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoxiao.dao.AdminDao">
+
+    <resultMap id="adminMapper" type="com.xiaoxiao.domain.Admin">
+        <id column="aid" property="aid"></id>
+        <result column="username" property="username"></result>
+        <collection property="roles" column="aid" ofType="com.xiaoxiao.domain.Role">
+            <id column="rid" property="rid"></id>
+            <result column="roleName" property="roleName"></result>
+            <result column="roleDesc" property="roleDesc"></result>
+            <collection property="permissions" column="rid" ofType="com.xiaoxiao.domain.Permission">
+                <id column="pid" property="pid"></id>
+                <result column="permissionName" property="permissionName"></result>
+                <result column="url" property="url"></result>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <insert id="insert">
+        insert into bz_admin(username,password) values(#{username},#{password})
+    </insert>
+    <insert id="insertRoleToAdmin">
+        insert into bz_admin_role values(#{aid},#{rid})
+    </insert>
+
+    <update id="update">
+        update bz_admin set username=#{username},password=#{password} where aid = #{aid}
+    </update>
+    <delete id="delete" parameterType="long">
+        delete from bz_admin where aid = #{aid}
+    </delete>
+    <delete id="deleteAdminAllRole">
+        delete from bz_admin_role where aid = #{aid}
+    </delete>
+    <select id="findById" parameterType="long" resultMap="adminMapper">
+        SELECT *
+        FROM bz_admin
+                 LEFT JOIN bz_admin_role
+                           ON bz_admin.aid = bz_admin_role.aid
+                 LEFT JOIN bz_role
+                           ON bz_admin_role.rid = bz_role.rid
+                 LEFT JOIN bz_role_permission
+                           ON bz_role.rid = bz_role_permission.rid
+                 LEFT JOIN bz_permission
+                           ON bz_role_permission.pid = bz_permission.pid
+        WHERE bz_admin.aid = #{aid}
+    </select>
+    <select id="findByUsername" resultType="com.xiaoxiao.domain.Admin" parameterType="string">
+        select * from bz_admin where username = #{username}
+    </select>
+    <select id="findAllPermission" parameterType="long" resultType="com.xiaoxiao.domain.Permission">
+        SELECT DISTINCT bz_permission.*
+        FROM bz_admin
+                 LEFT JOIN bz_admin_role
+                           ON bz_admin.aid = bz_admin_role.aid
+                 LEFT JOIN bz_role
+                           ON bz_admin_role.rid = bz_role.rid
+                 LEFT JOIN bz_role_permission
+                           ON bz_role.rid = bz_role_permission.rid
+                 LEFT JOIN bz_permission
+                           ON bz_role_permission.pid = bz_permission.pid
+        WHERE bz_admin.aid = #{aid}
+    </select>
+
+</mapper>
